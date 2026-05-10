@@ -1,6 +1,9 @@
 package matrix
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 // Vec3 是 3D 向量，用于 3D 空间中的位置、方向和颜色。
 type Vec3 struct {
@@ -41,8 +44,7 @@ func (v Vec3) Scale(s float32) Vec3 {
 }
 
 func (v Vec3) Dot(other Vec3) float32 {
-	// Todo：您的代码在这里
-	return 0
+	return v.X*other.X + v.Y*other.Y + v.Z*other.Z
 }
 
 // Cross 返回叉积 v × other。
@@ -52,33 +54,50 @@ func (v Vec3) Dot(other Vec3) float32 {
 //	cross.Y = v.Z*other.X - v.X*other.Z
 //	cross.Z = v.X*other.Y - v.Y*other.X
 func (v Vec3) Cross(other Vec3) Vec3 {
-	// Todo：您的代码在这里
-	return Vec3{}
+
+	return Vec3{
+		X: v.Y*other.Z - v.Z*other.Y,
+		Y: v.Z*other.X - v.X*other.Z,
+		Z: v.X*other.Y - v.Y*other.X,
+	}
 }
 
 func (v Vec3) Length() float32 {
-	// Todo：您的代码在这里
-	return 0
+	result := v.X*v.X + v.Y*v.Y + v.Z*v.Z
+	return float32(math.Sqrt(float64(result)))
+
 }
 
 func (v Vec3) LengthSquared() float32 {
 	// Todo：您的代码在这里
-	return 0
+	result := v.X*v.X + v.Y*v.Y + v.Z*v.Z
+	return result
 }
 
 func (v Vec3) Normalize() Vec3 {
-	// Todo：您的代码在这里
-	return Vec3{}
+	if v.LengthSquared() == 0 {
+		return Vec3{}
+	}
+	l := v.Length()
+	return Vec3{X: v.X / l, Y: v.Y / l, Z: v.Z / l}
 }
 
 func (v Vec3) Lerp(target Vec3, t float32) Vec3 {
-	// Todo：您的代码在这里
-	return Vec3{}
+
+	return Vec3{
+		X: v.X + (target.X-v.X)*t,
+		Y: v.Y + (target.Y-v.Y)*t,
+		Z: v.Z + (target.Z-v.Z)*t,
+	}
 }
 
 func (v Vec3) Negate() Vec3 {
-	// Todo：您的代码在这里
-	return Vec3{}
+
+	return Vec3{
+		X: -v.X,
+		Y: -v.Y,
+		Z: -v.Z,
+	}
 }
 
 func (v Vec3) String() string {

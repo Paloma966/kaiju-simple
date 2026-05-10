@@ -1,6 +1,9 @@
 package matrix
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
 
 // Mat4 是 4x4 列主序矩阵，以 [16]float32 扁平数组存储。
 //
@@ -52,10 +55,17 @@ func NewMat4(
 //
 // 重要：矩阵乘法不可交换。一般情况下 m * other ≠ other * m。
 func (m Mat4) Multiply(other Mat4) Mat4 {
-	// TODO: YOUR CODE HERE
-	// Compute result[i+j*4] = Σ(k=0..3) m[i+k*4] * other[k+j*4]
-	// for each i (row 0..3) and j (col 0..3)
-	return Identity()
+	var result Mat4
+	for i := range 4 {
+		for j := range 4 {
+			var sum float32
+			for k := range 4 {
+				sum += m[i+k*4] * other[k+j*4]
+			}
+			result[i+j*4] = sum
+		}
+	}
+	return result
 }
 
 // ------- 变换矩阵 -------
@@ -70,7 +80,12 @@ func (m Mat4) Multiply(other Mat4) Mat4 {
 //	0  0  0  1
 func Translate(x, y, z float32) Mat4 {
 	// TODO: YOUR CODE HERE
-	return Identity()
+	return Mat4{
+		1, 0, 0, x,
+		0, 1, 0, y,
+		0, 0, 1, z,
+		0, 0, 0, 1,
+	}
 }
 
 // Scale 返回缩放矩阵。
@@ -83,7 +98,12 @@ func Translate(x, y, z float32) Mat4 {
 //	└          ┘
 func Scale(x, y, z float32) Mat4 {
 	// TODO: YOUR CODE HERE
-	return Identity()
+	return Mat4{
+		x, 0, 0, 0,
+		0, y, 0, 0,
+		0, 0, z, 0,
+		0, 0, 0, 1,
+	}
 }
 
 // RotateX 返回绕 X 轴旋转 angle（弧度）的旋转矩阵。
@@ -98,7 +118,12 @@ func Scale(x, y, z float32) Mat4 {
 // 提示：使用 math.Sin 和 math.Cos
 func RotateX(angle float32) Mat4 {
 	// TODO: YOUR CODE HERE
-	return Identity()
+	return Mat4{
+		1, 0, 0, 0,
+		0, float32(math.Cos(float64(angle))), -float32(math.Sin(float64(angle))), 0,
+		0, float32(math.Sin(float64(angle))), float32(math.Cos(float64(angle))), 0,
+		0, 0, 0, 1,
+	}
 }
 
 // RotateY 返回绕 Y 轴旋转 angle（弧度）的旋转矩阵。
@@ -110,8 +135,12 @@ func RotateX(angle float32) Mat4 {
 //	│   0    0    0     1   │
 //	└                       ┘
 func RotateY(angle float32) Mat4 {
-	// TODO: YOUR CODE HERE
-	return Identity()
+	return Mat4{
+		float32(math.Cos(float64(angle))), 0, float32(math.Sin(float64(angle))), 0,
+		0, 1, 0, 0,
+		-float32(math.Sin(float64(angle))), 0, float32(math.Cos(float64(angle))), 0,
+		0, 0, 0, 1,
+	}
 }
 
 // RotateZ 返回绕 Z 轴旋转 angle（弧度）的旋转矩阵。
@@ -123,8 +152,12 @@ func RotateY(angle float32) Mat4 {
 //	│   0      0    0   1   │
 //	└                       ┘
 func RotateZ(angle float32) Mat4 {
-	// TODO: YOUR CODE HERE
-	return Identity()
+	return Mat4{
+		float32(math.Cos(float64(angle))), -float32(math.Sin(float64(angle))), 0, 0,
+		float32(math.Sin(float64(angle))), float32(math.Cos(float64(angle))), 0, 0,
+		0, 0, 1, 0,
+		0, 0, 0, 1,
+	}
 }
 
 // ------- 向量变换 -------

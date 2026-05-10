@@ -71,11 +71,9 @@ func (v Vec2) LengthSquared() float32 {
 func (v Vec2) Normalize() Vec2 {
 	if v.LengthSquared() == 0 {
 		return Vec2{}
-	} else {
-		l := v.Length()
-		return Vec2{X: v.X / l, Y: v.Y / l}
 	}
-
+	l := v.Length()
+	return Vec2{X: v.X / l, Y: v.Y / l}
 }
 
 // Lerp 按因子 t 在 v 和目标之间执行线性插值。
