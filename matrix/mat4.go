@@ -79,12 +79,11 @@ func (m Mat4) Multiply(other Mat4) Mat4 {
 //	0  0  1  z
 //	0  0  0  1
 func Translate(x, y, z float32) Mat4 {
-	// TODO: YOUR CODE HERE
 	return Mat4{
-		1, 0, 0, x,
-		0, 1, 0, y,
-		0, 0, 1, z,
-		0, 0, 0, 1,
+		1, 0, 0, 0,
+		0, 1, 0, 0,
+		0, 0, 1, 0,
+		x, y, z, 1,
 	}
 }
 
@@ -97,7 +96,6 @@ func Translate(x, y, z float32) Mat4 {
 //	│ 0  0  0 1│
 //	└          ┘
 func Scale(x, y, z float32) Mat4 {
-	// TODO: YOUR CODE HERE
 	return Mat4{
 		x, 0, 0, 0,
 		0, y, 0, 0,
@@ -117,11 +115,12 @@ func Scale(x, y, z float32) Mat4 {
 //
 // 提示：使用 math.Sin 和 math.Cos
 func RotateX(angle float32) Mat4 {
-	// TODO: YOUR CODE HERE
+	c := float32(math.Cos(float64(angle)))
+	s := float32(math.Sin(float64(angle)))
 	return Mat4{
 		1, 0, 0, 0,
-		0, float32(math.Cos(float64(angle))), -float32(math.Sin(float64(angle))), 0,
-		0, float32(math.Sin(float64(angle))), float32(math.Cos(float64(angle))), 0,
+		0, c, -s, 0,
+		0, s, c, 0,
 		0, 0, 0, 1,
 	}
 }
@@ -135,10 +134,12 @@ func RotateX(angle float32) Mat4 {
 //	│   0    0    0     1   │
 //	└                       ┘
 func RotateY(angle float32) Mat4 {
+	c := float32(math.Cos(float64(angle)))
+	s := float32(math.Sin(float64(angle)))
 	return Mat4{
-		float32(math.Cos(float64(angle))), 0, float32(math.Sin(float64(angle))), 0,
+		c, 0, -s, 0,
 		0, 1, 0, 0,
-		-float32(math.Sin(float64(angle))), 0, float32(math.Cos(float64(angle))), 0,
+		s, 0, c, 0,
 		0, 0, 0, 1,
 	}
 }
@@ -152,9 +153,11 @@ func RotateY(angle float32) Mat4 {
 //	│   0      0    0   1   │
 //	└                       ┘
 func RotateZ(angle float32) Mat4 {
+	c := float32(math.Cos(float64(angle)))
+	s := float32(math.Sin(float64(angle)))
 	return Mat4{
-		float32(math.Cos(float64(angle))), -float32(math.Sin(float64(angle))), 0, 0,
-		float32(math.Sin(float64(angle))), float32(math.Cos(float64(angle))), 0, 0,
+		c, s, 0, 0,
+		-s, c, 0, 0,
 		0, 0, 1, 0,
 		0, 0, 0, 1,
 	}
@@ -169,8 +172,11 @@ func RotateZ(angle float32) Mat4 {
 //	result.Y = m[1]*v.X + m[5]*v.Y + m[9]*v.Z  + m[13]
 //	result.Z = m[2]*v.X + m[6]*v.Y + m[10]*v.Z + m[14]
 func (m Mat4) MultiplyVec3(v Vec3) Vec3 {
-	// TODO: YOUR CODE HERE
-	return Vec3{}
+	return Vec3{
+		X: m[0]*v.X + m[4]*v.Y + m[8]*v.Z + m[12],
+		Y: m[1]*v.X + m[5]*v.Y + m[9]*v.Z + m[13],
+		Z: m[2]*v.X + m[6]*v.Y + m[10]*v.Z + m[14],
+	}
 }
 
 // MultiplyVec3Direction 用该矩阵变换 Vec3，将其视为方向（w=0）。
@@ -180,16 +186,23 @@ func (m Mat4) MultiplyVec3(v Vec3) Vec3 {
 //	result.Y = m[1]*v.X + m[5]*v.Y + m[9]*v.Z
 //	result.Z = m[2]*v.X + m[6]*v.Y + m[10]*v.Z
 func (m Mat4) MultiplyVec3Direction(v Vec3) Vec3 {
-	// TODO: YOUR CODE HERE
-	return Vec3{}
+	return Vec3{
+		X: m[0]*v.X + m[4]*v.Y + m[8]*v.Z,
+		Y: m[1]*v.X + m[5]*v.Y + m[9]*v.Z,
+		Z: m[2]*v.X + m[6]*v.Y + m[10]*v.Z,
+	}
 }
 
 // ------- 工具方法 -------
 
 // Transpose 返回该矩阵的转置（行变列、列变行）。
 func (m Mat4) Transpose() Mat4 {
-	// TODO: YOUR CODE HERE
-	return Identity()
+	return Mat4{
+		m[0], m[4], m[8], m[12],
+		m[1], m[5], m[9], m[13],
+		m[2], m[6], m[10], m[14],
+		m[3], m[7], m[11], m[15],
+	}
 }
 
 func (m Mat4) String() string {
